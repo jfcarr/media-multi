@@ -4,11 +4,31 @@ This is a utility for performing bulk conversions of media (audio, image, and vi
 
 I've also included a simple Makefile for handling builds and deployment.  You'll probably want to tweak it.
 
+## Presets
+
 To see a list of available conversion presets:
 
 ```bash
 media_multi -h
 ```
+
+Currently available:
+
+Source | Target
+---------|----------
+ avi | mp4
+ flac | mp3
+ jpg | pdf
+ jpg | png
+ mkv | mp4
+ mp4 | mp3
+ png | jpg
+ tif | jpg
+ tif | pdf
+ wav | mp3
+ webm | mp4
+ webp | jpg
+ wma | mp3
 
 ## Example
 
