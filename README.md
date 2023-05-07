@@ -2,6 +2,16 @@
 
 This is a utility for performing bulk conversions of media (audio, image, and video) files.  All conversions are currently presets, but a future version will support custom conversions.  It is tested in Linux only!
 
+This is a convenience utility.  It requires the following applications to be installed to handle the heavy lifting:
+
+Conversion Type | Application
+---------|----------
+Audio | [SoX](https://sox.sourceforge.net/)
+Image | convert _(part of [ImageMagick](https://imagemagick.org/))_
+Video | [FFmpeg](https://ffmpeg.org/)
+
+These utilities can be easily installed via your package manager.
+
 I've also included a simple Makefile for handling builds and deployment.  You'll probably want to tweak it.
 
 ## Presets
