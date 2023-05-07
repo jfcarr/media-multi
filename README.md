@@ -72,3 +72,23 @@ Since this is a Rust project, you can also run it with Cargo, e.g.:
 ```bash
 cargo run -- -o --avi-to-mp4
 ```
+
+## Multiple Conversions
+
+You can perform multiple conversions at once.  For example, to convert all .avi and .mkv files in the current directory to .mp4, you'd do this:
+
+```bash
+media_multi --avi-to-mp4 --mkv-to-mp4
+```
+
+_However_, the order of operations is unpredictable.  So if one set of conversions is dependent upon the output of another, don't try to do it as a single step.  Issue multiple commands instead.  For example, if you want to convert all .avi files to .mp4, and then convert the resulting .mp4 files to .mp3, _don't_ do this:
+
+```bash
+media_multi --avi-to-mp4 --mp4-to-mp3
+```
+Do this, instead:
+
+```bash
+media_multi --avi-to-mp4
+media_multi --mp4-to-mp3
+```
