@@ -1,6 +1,6 @@
 # media-multi
 
-This is a utility for performing bulk conversions of media (audio, image, and video) files.  All conversions are currently presets, but a future version will support custom conversions.  It is tested in Linux only!
+This is a utility for performing bulk conversions of media (audio, image, and video) files.  You can specify a preset conversion, or custom.  It is tested in Linux only!
 
 This is a convenience utility.  It requires the following applications to be installed to handle the heavy lifting:
 
@@ -40,7 +40,7 @@ Source | Target
  webp | jpg
  wma | mp3
 
-## Example
+## Example (preset)
 
 Assuming you are in a directory with three AVI files:
 
@@ -71,6 +71,16 @@ Since this is a Rust project, you can also run it with Cargo, e.g.:
 
 ```bash
 cargo run -- -o --avi-to-mp4
+```
+
+## Example (custom)
+
+If you want to execute a bulk conversion that doesn't have a preset, you can specify all of the parameters yourself.
+
+For example, if you wanted to convert all .ogg files in the current direct to .mp3, you'd use this:
+
+```bash
+media_multi --src-ext ogg --tgt-ext mp3 --ctype audio
 ```
 
 ## Multiple Conversions

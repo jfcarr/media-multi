@@ -19,10 +19,13 @@ pub fn run_batch(
         enums::ConversionType::Audio => "sox",
         enums::ConversionType::Image => "convert",
         enums::ConversionType::Video => "ffmpeg",
+        enums::ConversionType::Unknown => todo!(),
     };
 
     if ignore_utility_check || utils::is_in_path(command) {
         let paths = fs::read_dir("./").unwrap();
+
+        let mut file_count = 0;
 
         for path in paths {
             let clean_path = path.unwrap().path().display().to_string();
@@ -59,13 +62,20 @@ pub fn run_batch(
 
                         command.arg("-i").arg(input_file).arg(output_file);
                     }
+                    enums::ConversionType::Unknown => {
+                        todo!()
+                    }
                 }
 
                 let mut child = command.spawn().unwrap();
 
                 let _result = child.wait().unwrap();
+
+                file_count += 1;
             }
         }
+
+        println!("Processed {} file(s)", file_count);
     } else {
         println!(
             "This conversion is not available: '{}' is not found.",

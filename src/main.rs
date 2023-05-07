@@ -17,6 +17,18 @@ struct Args {
     #[arg(short, long)]
     overwrite: bool,
 
+    /// Extension of source file(s), e.g. mkv
+    #[arg(long, required = false)]
+    src_ext: Option<String>,
+
+    /// Extension of target file(s), e.g. mp4
+    #[arg(long, required = false)]
+    tgt_ext: Option<String>,
+
+    /// Type of conversion.  One of: audio, image, or video.
+    #[arg(long, required = false)]
+    ctype: Option<String>,
+
     /// Convert all .avi files in current directory to .mp4
     #[arg(long)]
     avi_to_mp4: bool, // video
@@ -119,6 +131,25 @@ fn main() {
 
     let mut operation_count = 0;
 
+    if args.src_ext != None && args.tgt_ext != None && args.ctype != None {
+        let conversion_type = match args.ctype.unwrap().as_str() {
+            "audio" => enums::ConversionType::Audio,
+            "image" => enums::ConversionType::Image,
+            "video" => enums::ConversionType::Video,
+            &_ => enums::ConversionType::Unknown,
+        };
+
+        convert::run_batch(
+            &conversion_type,
+            &args.src_ext.unwrap(),
+            &args.tgt_ext.unwrap(),
+            args.ignore_utility_check,
+            args.overwrite,
+        );
+
+        operation_count += 1;
+    }
+
     // Perform the conversions by walking the arg_bundle vector and calling run_batch with the arguments from each row.
     for x in &arg_bundle {
         convert::run_batch(
@@ -128,6 +159,7 @@ fn main() {
             args.ignore_utility_check,
             args.overwrite,
         );
+
         operation_count += 1;
     }
 
