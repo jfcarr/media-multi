@@ -3,6 +3,7 @@ use std::process::Command;
 
 use crate::enums;
 use crate::utils;
+use std::env;
 
 /**
  * Search current directory for file names ending with 'source_extension', construct a call to the appropriate
@@ -15,10 +16,34 @@ pub fn run_batch(
     ignore_utility_check: bool,
     overwrite: bool,
 ) {
+    let audio_application = format!(
+        "sox{}",
+        if env::consts::OS == "windows" {
+            ".exe"
+        } else {
+            ""
+        }
+    );
+    let image_application = format!(
+        "convert{}",
+        if env::consts::OS == "windows" {
+            ".exe"
+        } else {
+            ""
+        }
+    );
+    let video_application = format!(
+        "ffmpeg{}",
+        if env::consts::OS == "windows" {
+            ".exe"
+        } else {
+            ""
+        }
+    );
     let command = match conversion_type {
-        enums::ConversionType::Audio => "sox",
-        enums::ConversionType::Image => "convert",
-        enums::ConversionType::Video => "ffmpeg",
+        enums::ConversionType::Audio => &audio_application,
+        enums::ConversionType::Image => &image_application,
+        enums::ConversionType::Video => &video_application,
         enums::ConversionType::Unknown => todo!(),
     };
 

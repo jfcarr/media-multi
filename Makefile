@@ -14,3 +14,6 @@ build:
 
 release:
 	cargo build --release
+
+release-win:
+	cargo build --target x86_64-pc-windows-gnu --release
