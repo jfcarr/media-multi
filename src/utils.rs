@@ -1,5 +1,5 @@
-use std::env;
 use std::path::Path;
+use std::{env, fs};
 
 /**
  * Given a file name, return the file's extension without the leading period.
@@ -15,6 +15,20 @@ pub fn extract_file_stem(input_file: &String) -> String {
         .unwrap();
 
     return file_stem;
+}
+
+/**
+ * Check to see if the specified file exists.
+ */
+pub fn file_exists(file_name: &String) -> bool {
+    return Path::new(file_name).exists();
+}
+
+/**
+ * Delete the specified file.
+ */
+pub fn delete_file(file_name: &String) {
+    let _result = fs::remove_file(file_name);
 }
 
 /**

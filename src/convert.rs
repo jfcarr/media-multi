@@ -40,38 +40,43 @@ pub fn run_batch(
 
                 let output_file = format!("{}.{}", file_stem, target_extension);
 
-                println!("Converting {} to {}...", input_file, output_file);
+                let target_file_exists = utils::file_exists(&output_file);
 
-                let mut command = Command::new(command);
+                if target_file_exists && !overwrite {
+                    println!(
+                        "Skipping {}: target file {} exists.",
+                        input_file, output_file
+                    );
+                } else {
+                    println!("Converting {} to {}...", input_file, output_file);
 
-                match conversion_type {
-                    enums::ConversionType::Audio => {
-                        if overwrite {
-                            command.arg("--clobber");
+                    if target_file_exists {
+                        utils::delete_file(&output_file);
+                    }
+
+                    let mut command = Command::new(command);
+
+                    match conversion_type {
+                        enums::ConversionType::Audio => {
+                            command.arg(input_file).arg(output_file);
                         }
-
-                        command.arg(input_file).arg(output_file);
-                    }
-                    enums::ConversionType::Image => {
-                        command.arg(input_file).arg(output_file);
-                    }
-                    enums::ConversionType::Video => {
-                        if overwrite {
-                            command.arg("-y");
+                        enums::ConversionType::Image => {
+                            command.arg(input_file).arg(output_file);
                         }
+                        enums::ConversionType::Video => {
+                            command.arg("-i").arg(input_file).arg(output_file);
+                        }
+                        enums::ConversionType::Unknown => {
+                            todo!()
+                        }
+                    }
 
-                        command.arg("-i").arg(input_file).arg(output_file);
-                    }
-                    enums::ConversionType::Unknown => {
-                        todo!()
-                    }
+                    let mut child = command.spawn().unwrap();
+
+                    let _result = child.wait().unwrap();
+
+                    file_count += 1;
                 }
-
-                let mut child = command.spawn().unwrap();
-
-                let _result = child.wait().unwrap();
-
-                file_count += 1;
             }
         }
 
