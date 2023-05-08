@@ -1,6 +1,6 @@
 # media-multi
 
-This is a utility for performing bulk conversions of media (audio, image, and video) files.  You can specify a preset conversion, or custom.  It is tested in Linux only!
+This is a utility for performing bulk conversions of media (audio, image, and video) files.  You can specify a preset conversion, or custom.  **It is tested in Linux only!**
 
 This is a convenience utility.  It requires the following applications to be installed to handle the heavy lifting:
 
