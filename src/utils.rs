@@ -36,8 +36,13 @@ pub fn delete_file(file_name: &String) {
  */
 pub fn is_in_path(file_name: &str) -> bool {
     let path_string: String = env::var("PATH").unwrap().to_string();
+    let path_delimiter = if env::consts::OS == "windows" {
+        ';'
+    } else {
+        ':'
+    };
 
-    let split_string: std::str::Split<char> = path_string.split(':');
+    let split_string: std::str::Split<char> = path_string.split(path_delimiter);
 
     let mut file_available: bool = false;
     for path_segment in split_string {
