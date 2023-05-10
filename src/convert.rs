@@ -48,12 +48,13 @@ pub fn run_batch(
     };
 
     if ignore_utility_check || utils::is_in_path(command) {
-        let paths = fs::read_dir("./").unwrap();
+        let mut paths: Vec<_> = fs::read_dir("./").unwrap().map(|r| r.unwrap()).collect();
+        paths.sort_by_key(|dir| dir.path());
 
         let mut file_count = 0;
 
         for path in paths {
-            let clean_path = path.unwrap().path().display().to_string();
+            let clean_path = path.path().display().to_string();
 
             if clean_path
                 .to_lowercase()
