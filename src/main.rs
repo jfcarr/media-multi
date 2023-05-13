@@ -33,9 +33,21 @@ struct Args {
     #[arg(long)]
     avi_to_mp4: bool, // video
 
+    /// Convert all .fits files in current directory to .jpg
+    #[arg(long)]
+    fits_to_jpg: bool, // image
+
+    /// Convert all .fits files in current directory to .png
+    #[arg(long)]
+    fits_to_png: bool, // image
+
     /// Convert all .flac files in current directory to .mp3
     #[arg(long)]
     flac_to_mp3: bool, // audio
+
+    /// Convert all .jpg files in current directory to .fits
+    #[arg(long)]
+    jpg_to_fits: bool, // image
 
     /// Convert all .jpg files in current directory to .pdf
     #[arg(long)]
@@ -52,6 +64,10 @@ struct Args {
     /// Convert all .mp4 files in current directory to .mp3 (extract audio track from video file)
     #[arg(long)]
     mp4_to_mp3: bool, // video
+
+    /// Convert all .png files in current directory to .fits
+    #[arg(long)]
+    png_to_fits: bool, // image
 
     /// Convert all .png files in current directory to .jpg
     #[arg(long)]
@@ -92,8 +108,17 @@ fn main() {
     if args.avi_to_mp4 {
         arg_bundle.append(&mut vec![(enums::ConversionType::Video, "avi", "mp4")]);
     }
+    if args.fits_to_jpg {
+        arg_bundle.append(&mut vec![(enums::ConversionType::Image, "fits", "jpg")]);
+    }
+    if args.fits_to_png {
+        arg_bundle.append(&mut vec![(enums::ConversionType::Image, "fits", "png")]);
+    }
     if args.flac_to_mp3 {
         arg_bundle.append(&mut vec![(enums::ConversionType::Audio, "flac", "mp3")]);
+    }
+    if args.jpg_to_fits {
+        arg_bundle.append(&mut vec![(enums::ConversionType::Image, "jpg", "fits")]);
     }
     if args.jpg_to_pdf {
         arg_bundle.append(&mut vec![(enums::ConversionType::Image, "jpg", "pdf")]);
@@ -106,6 +131,9 @@ fn main() {
     }
     if args.mp4_to_mp3 {
         arg_bundle.append(&mut vec![(enums::ConversionType::Video, "mp4", "mp3")]);
+    }
+    if args.png_to_fits {
+        arg_bundle.append(&mut vec![(enums::ConversionType::Image, "png", "fits")]);
     }
     if args.png_to_jpg {
         arg_bundle.append(&mut vec![(enums::ConversionType::Image, "png", "jpg")]);
