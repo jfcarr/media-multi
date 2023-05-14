@@ -24,21 +24,20 @@ media_multi -h
 
 Currently available:
 
-Source | Target
----------|----------
- avi | mp4
- flac | mp3
- jpg | pdf
- jpg | png
- mkv | mp4
- mp4 | mp3
- png | jpg
- tif | jpg
- tif | pdf
- wav | mp3
- webm | mp4
- webp | jpg
- wma | mp3
+* avi -> mp4
+* fits <-> jpg
+* fits <-> png
+* flac -> mp3
+* jpg -> pdf
+* jpg <-> png
+* mkv -> mp4
+* mp4 -> mp3
+* tif -> jpg
+* tif -> pdf
+* wav -> mp3
+* webm -> mp4
+* webp -> jpg
+* wma -> mp3
 
 ## Example (preset)
 
