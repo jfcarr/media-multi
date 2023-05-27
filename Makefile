@@ -3,7 +3,7 @@ MACOS-RID = osx-x64
 WINDOWS-RID = win-x64
 
 LINUX-ARCHIVE = media-multi-linux.tar.gz
-MACOS-ARCHIVE = media-multi-mac.zip
+MACOS-ARCHIVE = media-multi-macos.zip
 WINDOWS-ARCHIVE = media-multi-windows.zip
 
 default:
