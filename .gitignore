@@ -1,4 +1,13 @@
-/target
+/bin
+/obj
+
+/.vscode
+
+media-multi-linux.tar.gz
+media-multi-mac.zip
+media-multi-windows.zip
 
 *.avi
+*.jpg
 *.mp4
+*.png

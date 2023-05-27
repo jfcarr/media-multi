@@ -1,19 +1,40 @@
-DEPLOYDIR = $(HOME)/bin
+LINUX-RID = linux-x64
+MACOS-RID = osx-x64
+WINDOWS-RID = win-x64
+
+LINUX-ARCHIVE = media-multi-linux.tar.gz
+MACOS-ARCHIVE = media-multi-mac.zip
+WINDOWS-ARCHIVE = media-multi-windows.zip
 
 default:
 	@echo 'Targets:'
 	@echo '  build'
-	@echo '  release'
 	@echo '  deploy'
+	@echo '  clean'
 
-deploy: release
-	cp ./target/release/media_multi $(DEPLOYDIR)
+build: clean build-linux build-mac build-windows
 
-build:
-	cargo build
+build-linux:
+	dotnet publish -c Release -r $(LINUX-RID) --self-contained true /p:PublishSingleFile=true
 
-release:
-	cargo build --release
+build-mac:
+	dotnet publish -c Release -r $(MACOS-RID) --self-contained true /p:PublishSingleFile=true
 
-release-win:
-	cargo build --target x86_64-pc-windows-gnu --release
+build-windows:
+	dotnet publish -c Release -r $(WINDOWS-RID) --self-contained true /p:PublishSingleFile=true
+
+deploy: deploy-linux
+
+deploy-linux: build-linux
+	cp ./bin/Release/net7.0/$(LINUX-RID)/publish/media-multi $(HOME)/bin
+
+bundle: build
+	tar -czf $(LINUX-ARCHIVE) ./bin/Release/net7.0/$(LINUX-RID)/publish/media-multi
+	zip $(MACOS-ARCHIVE) ./bin/Release/net7.0/$(MACOS-RID)/publish/media-multi
+	zip $(WINDOWS-ARCHIVE) ./bin/Release/net7.0/$(WINDOWS-RID)/publish/media-multi.exe
+
+clean:
+	dotnet clean
+	-rm -f $(LINUX-ARCHIVE)
+	-rm -f $(MACOS-ARCHIVE)
+	-rm -f $(WINDOWS-ARCHIVE)
