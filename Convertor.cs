@@ -63,7 +63,7 @@ namespace media_multi
 			{
 				var fileCount = 0;
 
-				var files = Directory.GetFiles(".");
+				var files = Directory.GetFiles(".").OrderBy(f => f);
 				foreach (var fileEntry in files)
 				{
 					if (fileEntry.ToLower().Contains($".{sourceExtension}"))
