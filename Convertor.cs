@@ -89,13 +89,13 @@ namespace media_multi
 							switch (conversionType)
 							{
 								case ConversionType.Audio:
-									arguments = $"{sourceFile} {targetFile}";
+									arguments = $"\"{sourceFile}\" \"{targetFile}\"";
 									break;
 								case ConversionType.Image:
-									arguments = $"{sourceFile} {targetFile}";
+									arguments = $"\"{sourceFile}\" \"{targetFile}\"";
 									break;
 								case ConversionType.Video:
-									arguments = $"-i {sourceFile} {targetFile}";
+									arguments = $"-i \"{sourceFile}\" \"{targetFile}\"";
 									break;
 								default:
 									break;
