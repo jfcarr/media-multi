@@ -1,5 +1,6 @@
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using Spectre.Console;
 
 namespace media_multi
 {
@@ -74,11 +75,11 @@ namespace media_multi
 						var targetFileExists = File.Exists(targetFile);
 						if (targetFileExists && !overwrite)
 						{
-							Console.WriteLine($"Skipping {sourceFile}: target file {targetFile} exists.");
+							AnsiConsole.MarkupLineInterpolated($"[yellow]Skipping {sourceFile}: target file {targetFile} exists.[/]");
 						}
 						else
 						{
-							Console.WriteLine($"Converting {sourceFile} to {targetFile}...");
+							AnsiConsole.MarkupLineInterpolated($"Converting {sourceFile} to {targetFile}...");
 
 							if (targetFileExists)
 							{
@@ -112,11 +113,11 @@ namespace media_multi
 					}
 				}
 
-				Console.WriteLine($"Processed {fileCount} file(s)");
+				AnsiConsole.MarkupLineInterpolated($"Processed {fileCount} file(s)");
 			}
 			else
 			{
-				Console.WriteLine($"This conversion is not available. '{command}' is not found.");
+				AnsiConsole.MarkupLineInterpolated($"[red]This conversion is not available. '{command}' is not found.[/]");
 			}
 		}
 	}

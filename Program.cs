@@ -1,140 +1,189 @@
-﻿using CommandLine;
+﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using media_multi;
+using Spectre.Console;
+using Spectre.Console.Cli;
 
 internal class Program
 {
-	public class Options
-	{
-		// General
-		[Option('i', "ignore-utility-check", Required = false, Default = false, HelpText = "Do not check for required installations before performing a conversion.")]
-		public bool IgnoreUtilityCheck { get; set; }
-
-		[Option('o', "overwrite", Required = false, Default = false, HelpText = "Overwrite existing target files.")]
-		public bool OverwriteExistingTargetFiles { get; set; }
-
-		// Custom Conversion
-		[Option("src-ext", Required = false, Default = "", HelpText = "Extension of source file(s), e.g. mkv")]
-		public string SourceExtension { get; set; }
-
-		[Option("tgt-ext", Required = false, Default = "", HelpText = "Extension of target file(s), e.g. mp4")]
-		public string TargetExtension { get; set; }
-
-		[Option("ctype", Required = false, Default = "", HelpText = "Type of conversion.  One of: audio, image, or video.")]
-		public string ConversionType { get; set; }
-
-		// Audio
-		[Option("flac-to-mp3", Required = false, Default = false, HelpText = "Convert all .flac files in current directory to .mp3")]
-		public bool FlacToMp3 { get; set; }
-
-		[Option("wav-to-mp3", Required = false, Default = false, HelpText = "Convert all .wav files in current directory to .mp3")]
-		public bool WavToMp3 { get; set; }
-
-		[Option("wma-to-mp3", Required = false, Default = false, HelpText = "Convert all .wma files in current directory to .mp3")]
-		public bool WmaToMp3 { get; set; }
-
-		// Images
-		[Option("fits-to-jpg", Required = false, Default = false, HelpText = "Convert all .fits files in current directory to .jpg")]
-		public bool FitsToJpg { get; set; }
-
-		[Option("fits-to-png", Required = false, Default = false, HelpText = "Convert all .fits files in current directory to .png")]
-		public bool FitsToPng { get; set; }
-
-		[Option("jpg-to-fits", Required = false, Default = false, HelpText = "Convert all .jpg files in current directory to .fits")]
-		public bool JpgToFits { get; set; }
-
-		[Option("jpg-to-pdf", Required = false, Default = false, HelpText = "Convert all .jpg files in current directory to .pdf")]
-		public bool JpgToPdf { get; set; }
-
-		[Option("jpg-to-png", Required = false, Default = false, HelpText = "Convert all .jpg files in current directory to .png")]
-		public bool JpgToPng { get; set; }
-
-		[Option("png-to-fits", Required = false, Default = false, HelpText = "Convert all .png files in current directory to .fits")]
-		public bool PngToFits { get; set; }
-
-		[Option("png-to-jpg", Required = false, Default = false, HelpText = "Convert all .png files in current directory to .jpg")]
-		public bool PngToJpg { get; set; }
-
-		[Option("tif-to-jpg", Required = false, Default = false, HelpText = "Convert all .tif files in current directory to .jpg")]
-		public bool TifToJpg { get; set; }
-
-		[Option("tif-to-pdf", Required = false, Default = false, HelpText = "Convert all .tif files in current directory to .pdf")]
-		public bool TifToPdf { get; set; }
-
-		[Option("webp-to-jpg", Required = false, Default = false, HelpText = "Convert all .webp files in current directory to .jpg")]
-		public bool WebpToJpg { get; set; }
-
-		// Video
-		[Option("avi-to-mp4", Required = false, Default = false, HelpText = "Convert all .avi files in current directory to .mp4")]
-		public bool AviToMp4 { get; set; }
-
-		[Option("mkv-to-mp4", Required = false, Default = false, HelpText = "Convert all .mkv files in current directory to .mp4")]
-		public bool MkvToMp4 { get; set; }
-
-		[Option("mp4-to-mp3", Required = false, Default = false, HelpText = "Convert all .mp4 files in current directory to .mp3 (extract audio track from video file)")]
-		public bool Mp4ToMp3 { get; set; }
-
-		[Option("webm-to-mp4", Required = false, Default = false, HelpText = "Convert all .webm files in current directory to .mp4")]
-		public bool WebmToMp4 { get; set; }
-
-	}
-
 	private static void Main(string[] args)
 	{
-		CommandLine.Parser.Default.ParseArguments<Options>(args)
-			.WithParsed(RunOptions)
-			.WithNotParsed(HandleParseError);
+		var app = new CommandApp<ConversionCommand>();
+
+		app.Run(args);
+	}
+}
+
+internal sealed class ConversionCommand : Command<ConversionCommand.Settings>
+{
+	public sealed class Settings : CommandSettings
+	{
+		// General
+		[CommandOption("-i|--ignore-utility-check")]
+		[DefaultValue(false)]
+		[Description("Do not check for required installations before performing a conversion.")]
+		public bool IgnoreUtilityCheck { get; init; }
+
+		[CommandOption("-o|--overwrite")]
+		[DefaultValue(false)]
+		[Description("Overwrite existing target files.")]
+		public bool OverwriteExistingTargetFiles { get; init; }
+
+		// Custom Conversion
+		[CommandOption("--src-ext")]
+		[DefaultValue("")]
+		[Description("Extension of source file(s), e.g. mkv")]
+		public string SourceExtension { get; init; }
+
+		[CommandOption("--tgt-ext")]
+		[DefaultValue("")]
+		[Description("Extension of target file(s), e.g. mp4")]
+		public string TargetExtension { get; init; }
+
+		[CommandOption("--ctype")]
+		[DefaultValue("")]
+		[Description("Type of conversion.  One of: audio, image, or video.")]
+		public string ConversionType { get; init; }
+
+		// Audio Presets
+		[CommandOption("--flac-to-mp3")]
+		[DefaultValue(false)]
+		[Description("Convert all .flac files in current directory to .mp3")]
+		public bool FlacToMp3 { get; init; }
+
+		[CommandOption("--wav-to-mp3")]
+		[DefaultValue(false)]
+		[Description("Convert all .wav files in current directory to .mp3")]
+		public bool WavToMp3 { get; init; }
+
+		[CommandOption("--wma-to-mp3")]
+		[DefaultValue(false)]
+		[Description("Convert all .wma files in current directory to .mp3")]
+		public bool WmaToMp3 { get; init; }
+
+		// Image Presets
+		[CommandOption("--fits-to-jpg")]
+		[DefaultValue(false)]
+		[Description("Convert all .fits files in current directory to .jpg")]
+		public bool FitsToJpg { get; init; }
+
+		[CommandOption("--fits-to-png")]
+		[DefaultValue(false)]
+		[Description("Convert all .fits files in current directory to .png")]
+		public bool FitsToPng { get; init; }
+
+		[CommandOption("--jpg-to-fits")]
+		[DefaultValue(false)]
+		[Description("Convert all .jpg files in current directory to .fits")]
+		public bool JpgToFits { get; init; }
+
+		[CommandOption("--jpg-to-pdf")]
+		[DefaultValue(false)]
+		[Description("Convert all .jpg files in current directory to .pdf")]
+		public bool JpgToPdf { get; init; }
+
+		[CommandOption("--jpg-to-png")]
+		[DefaultValue(false)]
+		[Description("Convert all .jpg files in current directory to .png")]
+		public bool JpgToPng { get; init; }
+
+		[CommandOption("--png-to-fits")]
+		[DefaultValue(false)]
+		[Description("Convert all .png files in current directory to .fits")]
+		public bool PngToFits { get; init; }
+
+		[CommandOption("--png-to-jpg")]
+		[DefaultValue(false)]
+		[Description("Convert all .png files in current directory to .jpg")]
+		public bool PngToJpg { get; init; }
+
+		[CommandOption("--tif-to-jpg")]
+		[DefaultValue(false)]
+		[Description("Convert all .tif files in current directory to .jpg")]
+		public bool TifToJpg { get; init; }
+
+		[CommandOption("--tif-to-pdf")]
+		[DefaultValue(false)]
+		[Description("Convert all .tif files in current directory to .pdf")]
+		public bool TifToPdf { get; init; }
+
+		[CommandOption("--webp-to-jpg")]
+		[DefaultValue(false)]
+		[Description("Convert all .webp files in current directory to .jpg")]
+		public bool WebpToJpg { get; init; }
+
+		// Video
+		[CommandOption("--avi-to-mp4")]
+		[DefaultValue(false)]
+		[Description("Convert all .avi files in current directory to .mp4")]
+		public bool AviToMp4 { get; init; }
+
+		[CommandOption("--mkv-to-mp4")]
+		[DefaultValue(false)]
+		[Description("Convert all .mkv files in current directory to .mp4")]
+		public bool MkvToMp4 { get; init; }
+
+		[CommandOption("--mp4-to-mp3")]
+		[DefaultValue(false)]
+		[Description("Convert all .mp4 files in current directory to .mp3 (extract audio track from video file)")]
+		public bool Mp4ToMp3 { get; init; }
+
+		[CommandOption("--webm-to-mp4")]
+		[DefaultValue(false)]
+		[Description("Convert all .webm files in current directory to .mp4")]
+		public bool WebmToMp4 { get; init; }
 	}
 
-	static void RunOptions(Options opts)
+	public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
 	{
 		var argBundle = new List<ArgBundle>();
 
 		// Audio
-		if (opts.FlacToMp3) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Audio, SourceExtension = "flac", TargetExtension = "mp3" });
+		if (settings.FlacToMp3) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Audio, SourceExtension = "flac", TargetExtension = "mp3" });
 
-		if (opts.WavToMp3) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Audio, SourceExtension = "wav", TargetExtension = "mp3" });
+		if (settings.WavToMp3) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Audio, SourceExtension = "wav", TargetExtension = "mp3" });
 
-		if (opts.WmaToMp3) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Audio, SourceExtension = "wma", TargetExtension = "mp3" });
+		if (settings.WmaToMp3) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Audio, SourceExtension = "wma", TargetExtension = "mp3" });
 
 		// Images
-		if (opts.FitsToJpg) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "fits", TargetExtension = "jpg" });
+		if (settings.FitsToJpg) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "fits", TargetExtension = "jpg" });
 
-		if (opts.FitsToPng) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "fits", TargetExtension = "png" });
+		if (settings.FitsToPng) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "fits", TargetExtension = "png" });
 
-		if (opts.JpgToFits) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "jpg", TargetExtension = "fits" });
+		if (settings.JpgToFits) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "jpg", TargetExtension = "fits" });
 
-		if (opts.JpgToPdf) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "jpg", TargetExtension = "pdf" });
+		if (settings.JpgToPdf) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "jpg", TargetExtension = "pdf" });
 
-		if (opts.JpgToPng) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "jpg", TargetExtension = "png" });
+		if (settings.JpgToPng) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "jpg", TargetExtension = "png" });
 
-		if (opts.PngToFits) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "png", TargetExtension = "fits" });
+		if (settings.PngToFits) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "png", TargetExtension = "fits" });
 
-		if (opts.PngToJpg) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "png", TargetExtension = "jpg" });
+		if (settings.PngToJpg) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "png", TargetExtension = "jpg" });
 
-		if (opts.TifToJpg) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "tif", TargetExtension = "jpg" });
+		if (settings.TifToJpg) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "tif", TargetExtension = "jpg" });
 
-		if (opts.TifToPdf) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "tif", TargetExtension = "pdf" });
+		if (settings.TifToPdf) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "tif", TargetExtension = "pdf" });
 
-		if (opts.WebpToJpg) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "webp", TargetExtension = "jpg" });
+		if (settings.WebpToJpg) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Image, SourceExtension = "webp", TargetExtension = "jpg" });
 
 		// Video
-		if (opts.AviToMp4) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Video, SourceExtension = "avi", TargetExtension = "mp4" });
+		if (settings.AviToMp4) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Video, SourceExtension = "avi", TargetExtension = "mp4" });
 
-		if (opts.MkvToMp4) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Video, SourceExtension = "mkv", TargetExtension = "mp4" });
+		if (settings.MkvToMp4) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Video, SourceExtension = "mkv", TargetExtension = "mp4" });
 
-		if (opts.Mp4ToMp3) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Video, SourceExtension = "mp4", TargetExtension = "mp3" });
+		if (settings.Mp4ToMp3) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Video, SourceExtension = "mp4", TargetExtension = "mp3" });
 
-		if (opts.WebmToMp4) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Video, SourceExtension = "webm", TargetExtension = "mp4" });
+		if (settings.WebmToMp4) argBundle.Add(new ArgBundle { TypeOfConversion = ConversionType.Video, SourceExtension = "webm", TargetExtension = "mp4" });
 
 		var operationCount = 0;
 
 		var converter = new Converter();
 
-		if (!string.IsNullOrEmpty(opts.SourceExtension) && !string.IsNullOrEmpty(opts.TargetExtension) && !string.IsNullOrEmpty(opts.ConversionType))
+		if (!string.IsNullOrEmpty(settings.SourceExtension) && !string.IsNullOrEmpty(settings.TargetExtension) && !string.IsNullOrEmpty(settings.ConversionType))
 		{
 			var conversionType = ConversionType.Unknown;
 
-			switch (opts.ConversionType)
+			switch (settings.ConversionType)
 			{
 				case "audio":
 					conversionType = ConversionType.Audio;
@@ -153,10 +202,10 @@ internal class Program
 			{
 				converter.RunBatch(
 					conversionType,
-					opts.SourceExtension,
-					opts.TargetExtension,
-					opts.IgnoreUtilityCheck,
-					opts.OverwriteExistingTargetFiles
+					settings.SourceExtension,
+					settings.TargetExtension,
+					settings.IgnoreUtilityCheck,
+					settings.OverwriteExistingTargetFiles
 				);
 
 				operationCount++;
@@ -169,23 +218,16 @@ internal class Program
 				argItem.TypeOfConversion,
 				argItem.SourceExtension,
 				argItem.TargetExtension,
-				opts.IgnoreUtilityCheck,
-				opts.OverwriteExistingTargetFiles
+				settings.IgnoreUtilityCheck,
+				settings.OverwriteExistingTargetFiles
 			);
 
 			operationCount++;
 		}
 
 		if (operationCount == 0)
-			Console.WriteLine("I'm not sure what you want to do. Use --help to see a list of options.");
-	}
+			AnsiConsole.MarkupLine("[red]I'm not sure what you want to do.[/] Use --help to see a list of options.");
 
-	static void HandleParseError(IEnumerable<Error> errs)
-	{
-		foreach (var err in errs)
-		{
-			if (!err.ToString().Contains("HelpRequestedError"))
-				Console.WriteLine($"  {err}");
-		}
+		return 0;
 	}
 }
